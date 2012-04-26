@@ -1,4 +1,5 @@
 # encoding: utf-8
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
 
 require 'rubygems'
 require 'bundler'
@@ -12,15 +13,17 @@ end
 require 'rake'
 
 require 'jeweler'
+require 'docfu'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "docfu"
   gem.homepage = "http://github.com/seryl/docfu"
   gem.license = "MIT"
-  gem.summary = %Q{Documentation like a ninja}
+  gem.summary = %Q{Docs like a ninja}
   gem.description = %Q{Utility to simplify creating documentation/books/ebooks/html/etc. Based highly upon the ProGit setup.}
   gem.email = "joshtoft@gmail.com"
   gem.authors = ["Josh Toft"]
+  gem.version = Docfu::VERSION
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
