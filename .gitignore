@@ -2,9 +2,6 @@
 coverage
 coverage.data
 
-# rdoc generated
-rdoc
-
 # yard generated
 doc
 .yardoc
