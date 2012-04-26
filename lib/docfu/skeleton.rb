@@ -1,0 +1,2 @@
+module Docfu::Skeleton
+end
