@@ -1,6 +1,6 @@
 # docfu
 
-Description goes here.
+A document generation utility. The intention is to make writing documentation // books less lame.
 
 ## Contributing to docfu
  
