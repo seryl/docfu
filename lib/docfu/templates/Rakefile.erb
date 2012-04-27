@@ -1,0 +1,23 @@
+# encoding: utf-8
+
+require 'docfu'
+
+$lang = ENV['lagnuage']
+$lang ||= 'en'
+
+namespace :epub do
+  TMP_DIR = File.join('epub', 'tmp', $lang)
+  INDEX_FILEPATH  = File.join(TMPDIR, '<%= project %>.html')
+  TARGET_FILEPATH = "<%= project %>-#{$lang}".epub"
+  
+  desc "Generate EPUB ebook (add language=xx to build a specific language)"
+  task :generate => :check
+  task :generate => TARGET_FILEPATH
+end
+
+namespace :pdf
+  desc "Generate a pdf"
+  task :generate do
+    # Generate pdf
+  end
+end

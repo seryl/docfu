@@ -55,7 +55,6 @@ class Docfu::Application
   end
     
   def run_commands
-    puts config
     if ARGV.size == 0 || aliases(ARGV.first).nil?
       puts self.opt_parser.help
       exit 0
@@ -66,7 +65,7 @@ class Docfu::Application
   
   def create_new_project
     project_folder = (ARGV.size >= 2) ? ARGV.last : nil
-    Docfu::Skeleton.setup_directory_structure(project_folder)
+    #Docfu::Skeleton.setup_directory_structure(project_folder)
     Docfu::Skeleton.setup_rakefile(project_folder)
     Docfu::Skeleton.setup_readme(project_folder)
   end
