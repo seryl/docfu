@@ -2,17 +2,27 @@ module Docfu::Skeleton
   class << self
     # Sets up a new directory structure for a document project.
     # 
-    # @param [ String ] folder The name of the project.
+    # @param [ String ] folder The project path.
     def setup_directory_structure(folder)
-      # Dir.mkdir()
+      Dir.mkdir(folder) unless Dir.exists? folder
+      %w( figures figures-dia figures-source latex ).each do |fold|
+        Dir.mkdir("#{folder}/#{fold}") unless Dir.exists? "#{folder}/#{fold}"
+      end
     end
     
+    # Sets up the Rakefile for the project.
     # 
+    # @param [ String ] folder The project path.
     def setup_rakefile(folder)
     end
     
+    # Sets up the README for the project.
     # 
+    # @param [ String ] folder The project path.
     def setup_readme(folder)
+      readme_data <<-EOH\# #{folder}
+      
+      EOH
     end
     
     # Takes an info hash and converts it into it's yaml equivalent config.yml.
@@ -36,16 +46,12 @@ module Docfu::Skeleton
     # otherwise it returns early.
     # 
     # @param [ Hash ] config The config hash to pass to generate_config_yml.
-    #
-    # @return []
     def write_config_yml_if_missing(config)
       if File.exists? config_file
         puts "config.yml already exists"
-        return false
       end
       yml = generate_config_yml(config)
       IO.write(config_file, yml)
-      return true
     end
     
     def config_file
