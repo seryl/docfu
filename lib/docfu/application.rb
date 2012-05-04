@@ -53,7 +53,7 @@ class Docfu::Application
     DEFAULT_ALIASES.each { |k, v| return k if v.include?(cmd) }
     nil
   end
-    
+  
   def run_commands
     if ARGV.size == 0 || aliases(ARGV.first).nil?
       puts self.opt_parser.help
