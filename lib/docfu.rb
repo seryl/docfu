@@ -1,12 +1,13 @@
 $:.unshift File.join(File.dirname(__FILE__), 'docfu')
 require 'erb'
+require 'fileutils'
 require 'yaml'
 
 require 'mixlib/cli'
 
 # Document like a ninja
 module Docfu
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 end
 
 require 'docfu/outputs'

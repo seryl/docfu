@@ -1,3 +1,5 @@
-module Docfu::Outputs
-  # Dir.glob('outputs/*.rb').each { |f| require f }
-end
+# -*- coding: utf-8 -*-
+$:.unshift File.dirname(__FILE__)
+require 'outputs/pdf'
+require 'outputs/ebook'
+require 'outputs/html'

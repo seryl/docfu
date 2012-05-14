@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # The commandline docfu application.
 class Docfu::Application
   include Mixlib::CLI
@@ -11,20 +12,47 @@ class Docfu::Application
   banner """Example usage:
   docfu new [document]
   docfu generate
-  docfu generate [ebook,pdf,html]
+  docfu generate [pdf,ebook,html]
   """
   
   option :author,
-    :short => "-a",
-    :long  => "--author",
+    :short => "-a AUTHOR",
+    :long  => "--author AUTHOR",
     :default => "author",
     :description => "The author of the document"
+    
+  option :exclude,
+    :short => "-e EXLCUDE",
+    :long  => "--exclude EXCLUDE",
+    :default => 'figures,figures-dia,figures-source,README.md',
+    :description => "The list of files and directories to exclude from scripts"
   
   option :title,
-    :short => "-t",
-    :long => "--title",
+    :short => "-t TITLE",
+    :long  => "--title TITLE",
     :default => "title",
     :description => "The title of the document"
+    
+  option :language,
+    :short => "-l LANGUAGE",
+    :long  => "--language LANGUAGE",
+    :default => "en",
+    :description => "The languages to build - defaults to english [en]"
+    
+  option :debug,
+    :short => "-d",
+    :long  => "--debug",
+    :description => "Enable debugging",
+    :boolean => true,
+    :default => false
+  
+  option :version,
+    :short => "-v",
+    :long  => "--version",
+    :description => "Show docfu version",
+    :boolean => true,
+    :proc => lambda { |v| puts "docfu: #{::Docfu::VERSION}" },
+    :exit => 0
   
   option :help,
     :short => "-h",
@@ -33,14 +61,6 @@ class Docfu::Application
     :on => :tail,
     :boolean => true,
     :show_options => true,
-    :exit => 0
-  
-  option :version,
-    :short => "-v",
-    :long  => "--version",
-    :description => "Show docfu version",
-    :boolean => true,
-    :proc => lambda { |v| puts "docfu: #{::Docfu::VERSION}" },
     :exit => 0
   
   def run
@@ -65,6 +85,24 @@ class Docfu::Application
   
   def create_new_project
     project_folder = (ARGV.size >= 2) ? ARGV.last : nil
+    puts "Creating new project #{project_folder}"
     Docfu::Skeleton.setup_directory_structure(project_folder)
+    Docfu::Skeleton.write_config_yml(project_folder)
+    Docfu::Skeleton.write_info_yml(project_folder, config)
+    puts "Complete."
+  end
+  
+  def generate_output
+    gen_type = (ARGV.size >= 2) ? ARGV.last : 'pdf'
+    invalid_type_error unless ['pdf', 'ebook', 'html'].include? gen_type
+    out = Docfu.const_get(gen_type.capitalize).new
+    out.check_missing_commands
+    out.check_valid_project
+    out.generate(config[:language].split(','), config[:debug])
+  end
+  
+  def invalid_type_error
+    puts "Error: invalid type. Please use one of `pdf, ebook, html`."
+    exit 0
   end
 end

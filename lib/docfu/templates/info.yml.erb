@@ -1,0 +1,7 @@
+---
+author: <%= sane_config['author'] %>
+title: <%= sane_config['title'] %>
+exclude:
+<% sane_config['exclude'].each do |e| %>
+- <%= e %>
+<% end %>
