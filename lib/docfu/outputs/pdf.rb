@@ -5,6 +5,7 @@ require 'base'
 module Docfu
   class Pdf < BaseOutput
     def generate(languages, debug)
+      create_output_dir unless File.exists? output_dir
       figures do
         languages.each do |lang|
           cfg = config['default'].merge(config[lang]) rescue config['default']
@@ -37,7 +38,7 @@ module Docfu
           cd(project_home)
           3.times do |i|
             print "    Pass #{i + 1}... "
-            IO.popen("xelatex -output-directory=\"#{dir}\" \"#{dir}/main.tex\" 2>&1") do |pipe|
+            IO.popen("xelatex -output-directory=\"#{output_dir}\" \"#{dir}/main.tex\" 2>&1") do |pipe|
               unless debug
                 if ~ /^!\s/
                   puts "failed with:\n      #{$_.strip}"
@@ -54,7 +55,8 @@ module Docfu
       
           unless abort
             print "  Moving output to #{info['title'].split(' ').join('_')}.#{lang}.pdf... "
-            mv("#{dir}/main.pdf", "#{project_home}/#{info['title'].split(' ').join('_')}.#{lang}.pdf")
+            ["aux", "log", "out", "toc"].each { |f| rm "#{output_dir}/main.#{f}" }
+            mv("#{output_dir}/main.pdf", "#{output_dir}/#{info['title'].split(' ').join('_')}.#{lang}.pdf")
             puts "done"
           end
         end
@@ -67,6 +69,10 @@ module Docfu
     
     def output_dir
       "#{project_home}/pdf"
+    end
+    
+    def create_output_dir
+      FileUtils.mkdir_p(output_dir)
     end
     
     def tex_template
