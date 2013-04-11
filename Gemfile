@@ -3,15 +3,15 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem "mixlib-cli", "~> 1.2.2"
+gem "mixlib-cli", "~> 1.3.0"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem "rspec", "~> 2.8.0"
-  gem "yard", "~> 0.7"
+  gem "rspec", "~> 2.13.0"
+  gem "yard", "~> 0.8.5.2"
   gem "cucumber", ">= 0"
-  gem "bundler", "~> 1.1.3"
-  gem "jeweler", "~> 1.8.3"
+  gem "bundler", "~> 1.3.5"
+  gem "jeweler", "https://github.com/aia/jeweler.git", :branch => 'simplecov'
   gem (RUBY_VERSION =~ /^1\.9/ ? "simplecov" : "rcov"), ">= 0"
 end
