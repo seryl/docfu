@@ -12,6 +12,6 @@ group :development do
   gem "yard", "~> 0.8.5.2"
   gem "cucumber", ">= 0"
   gem "bundler", "~> 1.3.5"
-  gem "jeweler", "https://github.com/aia/jeweler.git", :branch => 'simplecov'
+  gem "jeweler", :git => "https://github.com/aia/jeweler.git", :branch => 'simplecov'
   gem (RUBY_VERSION =~ /^1\.9/ ? "simplecov" : "rcov"), ">= 0"
 end
