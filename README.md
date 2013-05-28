@@ -4,11 +4,9 @@ A document generation utility. The intention is to make writing documentation //
 
 ## Installation
 
-On centos the following libraries need be installed:
+On centos 6 the following libraries need be installed:
 
-    texlive-latex texlive-xetex liberation pandoc
-    liberation-fonts-mono-fonts liberation-fonts-serif-fonts
-    liberation-fonts-common
+    texlive-latex texlive-xetex pandoc msttcore-fonts helvetica-fonts
 
 ## Contributing to docfu
  

@@ -56,9 +56,11 @@ module Docfu
           unless abort
             print "  Moving output to #{info['title'].split(' ').join('_')}.#{lang}.pdf... "
             ["aux", "log", "out", "toc"].each { |f| rm "#{output_dir}/main.#{f}" }
-            mv("#{output_dir}/main.pdf", "#{output_dir}/#{info['title'].split(' ').join('_')}.#{lang}.pdf")
+            mv("#{project_home}/main.pdf", "#{output_dir}/#{info['title'].split(' ').join('_')}.#{lang}.pdf")
             puts "done"
           end
+
+          File.delete("#{dir}/main.tex")
         end
       end
     end
@@ -134,15 +136,15 @@ module Docfu
         s(/SUBSUBSECTION: (.*)/, '\subsubsection{\1}')
 
         # Enable proper cross-reference
-        s(/#{config['fig'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\imgref{\1.\2}')
-        s(/#{config['tab'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\tabref{\1.\2}')
-        s(/#{config['prechap'].gsub(space, '\s')}\s*(\d+)(\s*)#{config['postchap'].gsub(space, '\s')}/, '\chapref{\1}\2')
+        s(/#{cfg['fig'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\imgref{\1.\2}')
+        s(/#{cfg['tab'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\tabref{\1.\2}')
+        s(/#{cfg['prechap'].gsub(space, '\s')}\s*(\d+)(\s*)#{cfg['postchap'].gsub(space, '\s')}/, '\chapref{\1}\2')
 
         # Miscellaneous fixes
         s(/FIG: (.*)/, '\img{\1}')
         s('\begin{enumerate}[1.]', '\begin{enumerate}')
         s(/(\w)--(\w)/, '\1-\2')
-        s(/``(.*?)''/, "#{config['dql']}\\1#{config['dqr']}")
+        s(/``(.*?)''/, "#{cfg['dql']}\\1#{cfg['dqr']}")
 
         # Typeset the maths in the book with TeX
         s('\verb!p = (n(n-1)/2) * (1/2^160))!', '$p = \frac{n(n-1)}{2} \times \frac{1}{2^{160}}$)')

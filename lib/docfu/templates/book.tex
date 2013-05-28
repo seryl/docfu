@@ -20,13 +20,13 @@
 
 \definecolor{shadecolor}{gray}{0.90}
 
-\setromanfont[Mapping=tex-text,BoldFont=<%= config['bold'] %>]{<%= config['font'] %>}
-\setmonofont[Scale=.85]{<%= config['mono'] %>}
+\setromanfont[Mapping=tex-text,BoldFont=<%= cfg['bold'] %>]{<%= cfg['font'] %>}
+\setmonofont[Scale=.85]{<%= cfg['mono'] %>}
 
 \XeTeXlinebreaklocale{<%= lang %>}
-<%= config['langrule'] %>
+<%= cfg['langrule'] %>
 
-\settowidth{\parindent}{<%= config['indent'] %>}
+\settowidth{\parindent}{<%= cfg['indent'] %>}
 
 \title{<%= info['title'] %>}
 \author{<%= info['author'] %>}
@@ -40,7 +40,7 @@
 \makeatother
 
 \title{\textbf{\savedtitle}}
-\author{\textbf{\savedauthor}\thanks{<%= config['thanks'] %>}}
+\author{\textbf{\savedauthor}\thanks{<%= cfg['thanks'] %>}}
 \def\w3cdtfymd{\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day}
 \date{\w3cdtfymd}
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
@@ -101,20 +101,20 @@
 \newcounter{tab}[chapter]
 \renewcommand{\thetab}{\thechapter.\arabic{tab}}
 
-\newcommand{\prechap}{<%= config['prechap'] %>}
-\newcommand{\postchap}{<%= config['postchap'] %>}
-\newcommand{\presect}{<%= config['presect'] %>}
-\newcommand{\postsect}{<%= config['postsect'] %>}
+\newcommand{\prechap}{<%= cfg['prechap'] %>}
+\newcommand{\postchap}{<%= cfg['postchap'] %>}
+\newcommand{\presect}{<%= cfg['presect'] %>}
+\newcommand{\postsect}{<%= cfg['postsect'] %>}
 \renewcommand{\chaptermark}[1]{\markboth{\textbf{\prechap \thechapter \postchap}\hspace*{1ex}#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\textbf{\presect \thesection \postsect}\hspace*{1ex}#1}}
 \newcommand{\chap}[1]{\newpage\thispagestyle{empty}\chapter{#1}\label{chap:\thechapter}}
 \newcommand{\chapref}[1]{\hyperref[chap:#1]{\prechap #1\postchap}}
-\newcommand{\imgref}[1]{\hyperref[img:#1]{<%= config['fig'] %>#1}}
-\newcommand{\tabref}[1]{\hyperref[tab:#1]{<%= config['tab'] %>#1}}
+\newcommand{\imgref}[1]{\hyperref[img:#1]{<%= cfg['fig'] %>#1}}
+\newcommand{\tabref}[1]{\hyperref[tab:#1]{<%= cfg['tab'] %>#1}}
 \newcommand{\e}[1]{$ \times 10^{#1}$}
-\renewcommand{\contentsname}{<%= config['con'] %>}
-\renewcommand{\figurename}{<%= config['fig'] %>}
-\renewcommand{\tablename}{<%= config['tab'] %>}
+\renewcommand{\contentsname}{<%= cfg['con'] %>}
+\renewcommand{\figurename}{<%= cfg['fig'] %>}
+\renewcommand{\tablename}{<%= cfg['tab'] %>}
 
 \makeatletter
 \def\@makechapterhead#1{%

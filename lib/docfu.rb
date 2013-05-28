@@ -7,7 +7,7 @@ require 'mixlib/cli'
 
 # Document like a ninja
 module Docfu
-  VERSION = '0.0.5'
+  VERSION = '0.0.8'
 end
 
 require 'docfu/outputs'
