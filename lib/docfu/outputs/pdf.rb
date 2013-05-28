@@ -96,11 +96,28 @@ module Docfu
     def pre_pandoc(string, cfg)
       replace(string) do
         # Pandoc discards #### subsubsections #### - this hack recovers them
+        s(/\#\#\#\#\# (.*?) \#\#\#\#\#/, 'PARAGRAPH: \1')
         s(/\#\#\#\# (.*?) \#\#\#\#/, 'SUBSUBSECTION: \1')
 
         # Turns URLs into clickable links
-        s(/\`(http:\/\/[A-Za-z0-9\/\%\&\=\-\_\\\.]+)\`/, '<\1>')
-        s(/(\n\n)\t(http:\/\/[A-Za-z0-9\/\%\&\=\-\_\\\.]+)\n([^\t]|\t\n)/, '\1<\2>\1')
+        s(/\`(http:\/\/[A-Za-z0-9\/\%\&\=\-\_\\\.\(\)\#]+)\`/, '<\1>')
+        s(/(\n\n)\t(http:\/\/[A-Za-z0-9\/\%\&\=\-\_\\\.\(\)\#]+)\n([^\t]|\t\n)/, '\1<\2>\1')
+
+        # Match table in markdown and change them to pandoc's markdown tables
+        s(/(\n(\n\t([^\t\n]+)\t([^\t\n]+))+\n\n)/) do
+          first_col=20
+          t = $1.gsub(/(\n?)\n\t([^\t\n]+)\t([^\t\n]+)/) do
+            if $1=="\n"
+              # This is the header, need to add the dash line
+              $1 << "\n " << $2 << " "*(first_col-$2.length) << $3 <<
+              "\n " << "-"*18 << "  " << "-"*$3.length
+            else
+              # Table row : format the first column as typewriter and align
+              $1 << "\n `" << $2 << "`" + " "*(first_col-$2.length-2) << $3
+            end
+          end
+          t << "\n"
+        end
 
         # Process figures
         s(/Insert\s18333fig\d+\.png\s*\n.*?\d{1,2}-\d{1,2}\. (.*)/, 'FIG: \1')
@@ -117,15 +134,15 @@ module Docfu
         s(/SUBSUBSECTION: (.*)/, '\subsubsection{\1}')
 
         # Enable proper cross-reference
-        s(/#{cfg['fig'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\imgref{\1.\2}')
-        s(/#{cfg['tab'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\tabref{\1.\2}')
-        s(/#{cfg['prechap'].gsub(space, '\s')}\s*(\d+)(\s*)#{cfg['postchap'].gsub(space, '\s')}/, '\chapref{\1}\2')
+        s(/#{config['fig'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\imgref{\1.\2}')
+        s(/#{config['tab'].gsub(space, '\s')}\s*(\d+)\-\-(\d+)/, '\tabref{\1.\2}')
+        s(/#{config['prechap'].gsub(space, '\s')}\s*(\d+)(\s*)#{config['postchap'].gsub(space, '\s')}/, '\chapref{\1}\2')
 
         # Miscellaneous fixes
         s(/FIG: (.*)/, '\img{\1}')
         s('\begin{enumerate}[1.]', '\begin{enumerate}')
         s(/(\w)--(\w)/, '\1-\2')
-        s(/``(.*?)''/, "#{cfg['dql']}\\1#{cfg['dqr']}")
+        s(/``(.*?)''/, "#{config['dql']}\\1#{config['dqr']}")
 
         # Typeset the maths in the book with TeX
         s('\verb!p = (n(n-1)/2) * (1/2^160))!', '$p = \frac{n(n-1)}{2} \times \frac{1}{2^{160}}$)')
@@ -133,16 +150,20 @@ module Docfu
         s(/\sx\s10\\\^\{\}(\d+)/, '\e{\1}')
 
         # Convert inline-verbatims into \texttt (which is able to wrap)
-        s(/\\verb(\W)(.*?)\1/) do
-          "{\\texttt{#{verbatim_sanitize($2)}}}"
-        end
+        s(/\\verb(\W)(.*?)\1/ ,'\\texttt{\2}')
+        # s(/\\verb(\W)(.*?)\1/) do
+        #   "{\\texttt{#{verbatim_sanitize($2)}}}"
+        # end
 
-        # Ensure monospaced stuff is in a smaller font
-        s(/(\\verb(\W).*?\2)/, '{\footnotesize\1}')
-        s(/(\\begin\{verbatim\}.*?\\end\{verbatim\})/m, '{\footnotesize\1}')
+        # Style Tables
+        s(/ctable\[pos = H, center, botcap\]\{..\}/ , 'ctable[pos = ht!, caption = ~ ,width = 130mm, center, botcap]{lX}')
 
         # Shaded verbatim block
         s(/(\\begin\{verbatim\}.*?\\end\{verbatim\})/m, '\begin{shaded}\1\end{shaded}')
+
+        # Ensure monospaced stuff is in a smaller font
+        # s(/(\\verb(\W).*?\2)/, '{\footnotesize\1}')
+        # s(/(\\begin\{verbatim\}.*?\\end\{verbatim\})/m, '{\footnotesize\1}')
       end
     end
     

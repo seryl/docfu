@@ -13,18 +13,20 @@
 \usepackage{booktabs}
 \usepackage{indentfirst}
 \usepackage{framed,color}
-\usepackage{array}
-\usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
+\usepackage{caption}
+\captionsetup{font=bf,position=below}
+
+\usepackage{ctable}
 
 \definecolor{shadecolor}{gray}{0.90}
 
-\setromanfont[Mapping=tex-text,BoldFont=<%= cfg['bold'] %>]{<%= cfg['font'] %>}
-\setmonofont{<%= cfg['mono'] %>}
+\setromanfont[Mapping=tex-text,BoldFont=<%= config['bold'] %>]{<%= config['font'] %>}
+\setmonofont[Scale=.85]{<%= config['mono'] %>}
 
 \XeTeXlinebreaklocale{<%= lang %>}
-<%= cfg['langrule'] %>
+<%= config['langrule'] %>
 
-\settowidth{\parindent}{<%= cfg['indent'] %>}
+\settowidth{\parindent}{<%= config['indent'] %>}
 
 \title{<%= info['title'] %>}
 \author{<%= info['author'] %>}
@@ -38,13 +40,11 @@
 \makeatother
 
 \title{\textbf{\savedtitle}}
-\author{\textbf{\savedauthor}\thanks{<%= cfg['thanks'] %>}}
+\author{\textbf{\savedauthor}\thanks{<%= config['thanks'] %>}}
 \def\w3cdtfymd{\the\year-\ifnum\month<10 0\fi\the\month-\ifnum\day<10 0\fi\the\day}
 \date{\w3cdtfymd}
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
-\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
-\let\PBS=\PreserveBackslash
 \makeatletter
   \setlength\headheight{12\p@}
   \setlength\headsep   {.25in}
@@ -90,30 +90,31 @@
 
 \newcounter{img}[chapter]
 \renewcommand{\theimg}{\thechapter.\arabic{img}}
-\newcommand{\img}[1]{\begin{figure}[h!]
-	\refstepcounter{img}
-	\label{img:\theimg}
-	\centering\includegraphics[width=\maxwidth]{figures/\theimg.png}
-	\caption{#1}
+\newcommand{\img}[1]{\begin{figure}[ht!]
+  \refstepcounter{img}
+  \label{img:\theimg}
+  \centering\IfFileExists{figures/\theimg.pdf}{\includegraphics[width=\maxwidth]{figures/\theimg.pdf}}{\includegraphics[width=\maxwidth]{figures/\theimg.png}}
+
+  \caption{#1}
 \end{figure}}
 
 \newcounter{tab}[chapter]
 \renewcommand{\thetab}{\thechapter.\arabic{tab}}
 
-\newcommand{\prechap}{<%= cfg['prechap'] %>}
-\newcommand{\postchap}{<%= cfg['postchap'] %>}
-\newcommand{\presect}{<%= cfg['presect'] %>}
-\newcommand{\postsect}{<%= cfg['postsect'] %>}
+\newcommand{\prechap}{<%= config['prechap'] %>}
+\newcommand{\postchap}{<%= config['postchap'] %>}
+\newcommand{\presect}{<%= config['presect'] %>}
+\newcommand{\postsect}{<%= config['postsect'] %>}
 \renewcommand{\chaptermark}[1]{\markboth{\textbf{\prechap \thechapter \postchap}\hspace*{1ex}#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\textbf{\presect \thesection \postsect}\hspace*{1ex}#1}}
 \newcommand{\chap}[1]{\newpage\thispagestyle{empty}\chapter{#1}\label{chap:\thechapter}}
 \newcommand{\chapref}[1]{\hyperref[chap:#1]{\prechap #1\postchap}}
-\newcommand{\imgref}[1]{\hyperref[img:#1]{<%= cfg['fig'] %>#1}}
-\newcommand{\tabref}[1]{\hyperref[tab:#1]{<%= cfg['tab'] %>#1}}
+\newcommand{\imgref}[1]{\hyperref[img:#1]{<%= config['fig'] %>#1}}
+\newcommand{\tabref}[1]{\hyperref[tab:#1]{<%= config['tab'] %>#1}}
 \newcommand{\e}[1]{$ \times 10^{#1}$}
-\renewcommand{\contentsname}{<%= cfg['con'] %>}
-\renewcommand{\figurename}{<%= cfg['fig'] %>}
-\renewcommand{\tablename}{<%= cfg['tab'] %>}
+\renewcommand{\contentsname}{<%= config['con'] %>}
+\renewcommand{\figurename}{<%= config['fig'] %>}
+\renewcommand{\tablename}{<%= config['tab'] %>}
 
 \makeatletter
 \def\@makechapterhead#1{%
