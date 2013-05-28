@@ -2,6 +2,13 @@
 
 A document generation utility. The intention is to make writing documentation // books less lame.
 
+## Installation
+
+On centos the following libraries need be installed:
+
+    texlive-latex texlive-xetex liberation pandoc
+    liberation-fonts-mono-fonts liberation-fonts-serif-fonts liberation-fonts-common
+
 ## Contributing to docfu
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
